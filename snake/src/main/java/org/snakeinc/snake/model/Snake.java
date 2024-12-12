@@ -53,32 +53,39 @@ public class Snake {
     }
 
     public int eat(Food food) {
-        int sizeIncrease = 1;
+        int sizeIncrease = 1; // Default size increase
         switch (race) {
             case PYTHON:
                 if (food.getType() == Food.FoodType.BROCOLI) {
                     sizeIncrease = -2;
                 }
+                break;
             case ANACONDA:
                 if (food.getType() == Food.FoodType.APPLE) {
                     sizeIncrease = 2;
                 } else if (food.getType() == Food.FoodType.BROCOLI) {
                     sizeIncrease = -1;
                 }
+                break;
             case BOA:
                 if (food.getType() == Food.FoodType.APPLE) {
                     sizeIncrease = 3;
                 } else if (food.getType() == Food.FoodType.BROCOLI) {
                     sizeIncrease = 0;
                 }
+                break;
+            default :
+                throw new IllegalArgumentException("unrecognized snake race");
         }
         if (sizeIncrease > 0) {
             for (int i = 0; i < sizeIncrease; i++) {
                 body.add(body.get(body.size() - 1).copy());
             }
-        } else {
+        } else if (sizeIncrease < 0) {
             for (int i = 0; i < -sizeIncrease; i++) {
-                body.remove(body.size() - 1);
+                if (!body.isEmpty()) {
+                    body.remove(body.size() - 1);
+                }
             }
         }
         return sizeIncrease;
