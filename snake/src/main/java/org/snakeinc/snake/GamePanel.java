@@ -25,7 +25,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Snake snake;
     private Food food;
     private boolean running = false;
-    private char direction = 'R';
+    private Snake.Direction direction = Snake.Direction.RIGHT;
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
@@ -99,23 +99,23 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         if (running) {
             switch (e.getKeyCode()) {
                 case KeyEvent.VK_LEFT:
-                    if (direction != 'R') {
-                        direction = 'L';
+                    if (direction != Snake.Direction.RIGHT) {
+                        direction = Snake.Direction.LEFT;
                     }
                     break;
                 case KeyEvent.VK_RIGHT:
-                    if (direction != 'L') {
-                        direction = 'R';
+                    if (direction != Snake.Direction.LEFT) {
+                        direction = Snake.Direction.RIGHT;
                     }
                     break;
                 case KeyEvent.VK_UP:
-                    if (direction != 'D') {
-                        direction = 'U';
+                    if (direction != Snake.Direction.DOWN) {
+                        direction = Snake.Direction.UP;
                     }
                     break;
                 case KeyEvent.VK_DOWN:
-                    if (direction != 'U') {
-                        direction = 'D';
+                    if (direction != Snake.Direction.UP) {
+                        direction = Snake.Direction.DOWN;
                     }
                     break;
             }

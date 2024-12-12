@@ -10,7 +10,14 @@ public class Snake {
     private final ArrayList<Tile> body;
     private Race race;
 
-    private enum Race {
+    public static enum Direction {
+        UP,
+        DOWN,
+        LEFT,
+        RIGHT
+    }
+
+    private static enum Race {
         PYTHON(Color.GREEN),
         ANACONDA(Color.GRAY),
         BOA(Color.BLUE);
@@ -76,20 +83,20 @@ public class Snake {
         }
     }
 
-    public void move(char direction) {
+    public void move(Snake.Direction direction) {
         Tile newHead = getHead().copy();
 
         switch (direction) {
-            case 'U':
+            case Snake.Direction.UP:
                 newHead.setY(newHead.getY() - 1);
                 break;
-            case 'D':
+            case Snake.Direction.DOWN:
                 newHead.setY(newHead.getY() + 1);
                 break;
-            case 'L':
+            case Snake.Direction.LEFT:
                 newHead.setX(newHead.getX() - 1);
                 break;
-            case 'R':
+            case Snake.Direction.RIGHT:
                 newHead.setX(newHead.getX() + 1);
                 break;
         }

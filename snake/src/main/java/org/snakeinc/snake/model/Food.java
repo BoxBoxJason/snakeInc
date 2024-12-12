@@ -10,7 +10,7 @@ import org.snakeinc.snake.GamePanel;
 
 public class Food {
 
-    public enum FoodType {
+    public static enum FoodType {
         APPLE(Color.RED),
         BANANA(Color.YELLOW),
         BROCOLI(Color.GREEN);

@@ -18,7 +18,7 @@ public class SnakeTest {
 
     @Test void snakeMovesUp_ReturnCorrectHead() {
         Snake snake = new Snake();
-        snake.move('U');
+        snake.move(Snake.Direction.UP);
         Assertions.assertEquals(5, snake.getHead().getX());
         Assertions.assertEquals(5, snake.getHead().getY());
     }
