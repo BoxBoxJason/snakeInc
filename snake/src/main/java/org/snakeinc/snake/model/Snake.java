@@ -46,7 +46,34 @@ public class Snake {
     }
 
     public void eat(Food food) {
-        body.add(food.getPosition());
+        int sizeIncrease = 1;
+        switch (race) {
+            case PYTHON:
+                if (food.getType() == Food.FoodType.BROCOLI) {
+                    sizeIncrease = -2;
+                }
+            case ANACONDA:
+                if (food.getType() == Food.FoodType.APPLE) {
+                    sizeIncrease = 2;
+                } else if (food.getType() == Food.FoodType.BROCOLI) {
+                    sizeIncrease = -1;
+                }
+            case BOA:
+                if (food.getType() == Food.FoodType.APPLE) {
+                    sizeIncrease = 3;
+                } else if (food.getType() == Food.FoodType.BROCOLI) {
+                    sizeIncrease = 0;
+                }
+        }
+        if (sizeIncrease > 0) {
+            for (int i = 0; i < sizeIncrease; i++) {
+                body.add(body.get(body.size() - 1).copy());
+            }
+        } else {
+            for (int i = 0; i < -sizeIncrease; i++) {
+                body.remove(body.size() - 1);
+            }
+        }
     }
 
     public void move(char direction) {

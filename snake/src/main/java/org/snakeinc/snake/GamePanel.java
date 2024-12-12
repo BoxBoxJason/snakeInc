@@ -75,11 +75,19 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    private void checkZeroLength() {
+        if (snake.getBody().size() == 0) {
+            running = false;
+            timer.stop();
+        }
+    }
+
     @Override
     public void actionPerformed(ActionEvent e) {
         if (running) {
             snake.move(direction);
             checkCollision();
+            checkZeroLength();
         }
         repaint();
     }
