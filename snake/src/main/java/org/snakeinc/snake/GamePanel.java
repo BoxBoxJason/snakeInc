@@ -60,6 +60,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         g.setFont(new Font("Arial", Font.BOLD, 20));
         FontMetrics metrics = getFontMetrics(g.getFont());
         g.drawString("Game Over", (GAME_WIDTH - metrics.stringWidth("Game Over")) / 2, GAME_HEIGHT / 2);
+        g.drawString("Press any key to restart", (GAME_WIDTH - metrics.stringWidth("Press any key to restart")) / 2,
+                GAME_HEIGHT / 2 + 20);
     }
 
     private void checkCollision() {
@@ -94,27 +96,31 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_LEFT:
-                if (direction != 'R') {
-                    direction = 'L';
-                }
-                break;
-            case KeyEvent.VK_RIGHT:
-                if (direction != 'L') {
-                    direction = 'R';
-                }
-                break;
-            case KeyEvent.VK_UP:
-                if (direction != 'D') {
-                    direction = 'U';
-                }
-                break;
-            case KeyEvent.VK_DOWN:
-                if (direction != 'U') {
-                    direction = 'D';
-                }
-                break;
+        if (running) {
+            switch (e.getKeyCode()) {
+                case KeyEvent.VK_LEFT:
+                    if (direction != 'R') {
+                        direction = 'L';
+                    }
+                    break;
+                case KeyEvent.VK_RIGHT:
+                    if (direction != 'L') {
+                        direction = 'R';
+                    }
+                    break;
+                case KeyEvent.VK_UP:
+                    if (direction != 'D') {
+                        direction = 'U';
+                    }
+                    break;
+                case KeyEvent.VK_DOWN:
+                    if (direction != 'U') {
+                        direction = 'D';
+                    }
+                    break;
+            }
+        } else {
+            startGame();
         }
     }
 
