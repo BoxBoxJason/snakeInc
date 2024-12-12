@@ -47,7 +47,7 @@ public class Food {
     public void updateLocation() {
         type = FoodType.getRandomFoodType();
         position = new Tile(random.nextInt(0, (GamePanel.GAME_WIDTH / GamePanel.TILE_SIZE) - 1),
-                random.nextInt(0, (GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE) - 1));
+                random.nextInt(0, (GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE) - 2));
     }
 
     public void draw(Graphics g) {
