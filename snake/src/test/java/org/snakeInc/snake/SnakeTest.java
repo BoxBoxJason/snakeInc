@@ -2,7 +2,7 @@ package org.snakeInc.snake;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.snakeinc.snake.model.Apple;
+import org.snakeinc.snake.model.Food;
 import org.snakeinc.snake.model.Snake;
 
 public class SnakeTest {
@@ -10,8 +10,8 @@ public class SnakeTest {
     @Test
     public void snakeEatApples_ReturnsCorrectBodySize() {
         Snake snake = new Snake();
-        Apple apple = new Apple();
-        snake.eat(apple);
+        Food food = new Food();
+        snake.eat(food);
         Assertions.assertEquals(2, snake.getBody().size());
 
     }

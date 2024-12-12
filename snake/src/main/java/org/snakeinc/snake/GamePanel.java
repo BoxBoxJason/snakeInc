@@ -11,7 +11,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import org.snakeinc.snake.model.Apple;
+import org.snakeinc.snake.model.Food;
 import org.snakeinc.snake.model.Snake;
 
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
@@ -23,7 +23,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     public static final int GAME_HEIGHT = TILE_SIZE * N_TILES_Y;
     private Timer timer;
     private Snake snake;
-    private Apple apple;
+    private Food food;
     private boolean running = false;
     private char direction = 'R';
 
@@ -38,7 +38,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     private void startGame() {
         snake = new Snake();
-        apple = new Apple();
+        food = new Food();
         timer = new Timer(100, this);
         timer.start();
         running = true;
@@ -48,7 +48,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         if (running) {
-            apple.draw(g);
+            food.draw(g);
             snake.draw(g);
         } else {
             gameOver(g);
@@ -69,9 +69,9 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             timer.stop();
         }
         // Vérifie si le serpent mange la pomme
-        if (snake.getHead().equals(apple.getPosition())) {
-            snake.eat(apple);
-            apple.updateLocation();
+        if (snake.getHead().equals(food.getPosition())) {
+            snake.eat(food);
+            food.updateLocation();
         }
     }
 
