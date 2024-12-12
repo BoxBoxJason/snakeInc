@@ -26,6 +26,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Food food;
     private boolean running = false;
     private Snake.Direction direction = Snake.Direction.RIGHT;
+    private int score = 0;
+    
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
@@ -42,11 +44,18 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         timer = new Timer(100, this);
         timer.start();
         running = true;
+        score = 0;
     }
 
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 16));
+        FontMetrics metrics = getFontMetrics(g.getFont());
+        g.drawString("Score: " + score, (GAME_WIDTH - metrics.stringWidth("Score: " + score)) / 2, 20);
+
         if (running) {
             food.draw(g);
             snake.draw(g);
@@ -61,7 +70,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         FontMetrics metrics = getFontMetrics(g.getFont());
         g.drawString("Game Over", (GAME_WIDTH - metrics.stringWidth("Game Over")) / 2, GAME_HEIGHT / 2);
         g.drawString("Press any key to restart", (GAME_WIDTH - metrics.stringWidth("Press any key to restart")) / 2,
-                GAME_HEIGHT / 2 + 20);
+                GAME_HEIGHT / 2 + 50);
     }
 
     private void checkCollision() {
@@ -72,7 +81,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
         // Vérifie si le serpent mange la pomme
         if (snake.getHead().equals(food.getPosition())) {
-            snake.eat(food);
+            score += Math.max(snake.eat(food),0);
             food.updateLocation();
         }
     }

@@ -52,7 +52,7 @@ public class Snake {
         return body.getFirst();
     }
 
-    public void eat(Food food) {
+    public int eat(Food food) {
         int sizeIncrease = 1;
         switch (race) {
             case PYTHON:
@@ -81,6 +81,7 @@ public class Snake {
                 body.remove(body.size() - 1);
             }
         }
+        return sizeIncrease;
     }
 
     public void move(Snake.Direction direction) {
