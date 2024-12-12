@@ -49,6 +49,9 @@ public class Snake {
     }
 
     public Tile getHead() {
+        if (body.isEmpty()) {
+            return null;
+        }
         return body.getFirst();
     }
 

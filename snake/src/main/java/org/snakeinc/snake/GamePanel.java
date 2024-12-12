@@ -1,5 +1,6 @@
 package org.snakeinc.snake;
 
+import java.util.Random;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -14,6 +15,8 @@ import javax.swing.Timer;
 import org.snakeinc.snake.model.Food;
 import org.snakeinc.snake.model.Snake;
 
+import lombok.Getter;
+
 public class GamePanel extends JPanel implements ActionListener, KeyListener {
 
     public static final int TILE_SIZE = 20;
@@ -22,12 +25,21 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     public static final int GAME_WIDTH = TILE_SIZE * N_TILES_X;
     public static final int GAME_HEIGHT = TILE_SIZE * N_TILES_Y;
     private Timer timer;
-    private Snake snake;
+    // On n'aura jamais plus que 1 Panel de toute façon :)
+    @Getter
+    private static Snake snake;
     private Food food;
     private boolean running = false;
     private Snake.Direction direction = Snake.Direction.RIGHT;
     private int score = 0;
-    
+    @Getter
+    private static Difficulty difficulty = Difficulty.MEDIUM;
+
+    public static enum Difficulty {
+        EASY,
+        MEDIUM,
+        HARD,
+    }
 
     public GamePanel() {
         this.setPreferredSize(new Dimension(GAME_WIDTH, GAME_HEIGHT));
@@ -45,6 +57,10 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         timer.start();
         running = true;
         score = 0;
+
+        Random random = new Random();
+        int difficultyIndex = random.nextInt(0, Difficulty.values().length);
+        GamePanel.difficulty = Difficulty.values()[difficultyIndex];
     }
 
     @Override
@@ -82,12 +98,13 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         // Vérifie si le serpent mange la pomme
         if (snake.getHead().equals(food.getPosition())) {
             score += Math.max(snake.eat(food),0) * 5;
+            checkZeroLength();
             food.updateLocation();
         }
     }
 
     private void checkZeroLength() {
-        if (snake.getBody().size() == 0) {
+        if (snake.getBody().size() == 0 || snake.getHead() == null) {
             running = false;
             timer.stop();
         }
@@ -98,7 +115,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         if (running) {
             snake.move(direction);
             checkCollision();
-            checkZeroLength();
         }
         repaint();
     }

@@ -33,13 +33,33 @@ public class Tile {
     }
 
     public static Tile getRandomTile() {
+        int randomStartXMin = 0;
+        int randomStartXMax = GamePanel.GAME_WIDTH / GamePanel.TILE_SIZE;
+        int randomStartYMin = 0;
+        int randomStartYMax = GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE;
+
+        switch (GamePanel.getDifficulty()) {
+            case GamePanel.Difficulty.EASY:
+                Tile head = GamePanel.getSnake().getHead();
+                randomStartXMin = head.getX() - 3;
+                randomStartXMax = head.getX() + 3;
+                randomStartYMin = head.getY() - 3;
+                randomStartYMax = head.getY() + 3;
+                break;
+            case GamePanel.Difficulty.MEDIUM:
+                break;
+            case GamePanel.Difficulty.HARD:
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid difficulty");
+        }
         Random random = new Random();
-        int x = random.nextInt(0, (GamePanel.GAME_WIDTH / GamePanel.TILE_SIZE) - 1);
-        int y = random.nextInt(0, (GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE) - 1);
+        int x = random.nextInt(randomStartXMin, randomStartXMax);
+        int y = random.nextInt(randomStartYMin, randomStartYMax);
         String randomKey = getKey(x, y);
         while (existingTiles.contains(randomKey)) {
-            x = random.nextInt(0, (GamePanel.GAME_WIDTH / GamePanel.TILE_SIZE) - 1);
-            y = random.nextInt(0, (GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE) - 1);
+            x = random.nextInt(randomStartXMin, randomStartXMax);
+            y = random.nextInt(randomStartYMin, randomStartYMax);
             randomKey = getKey(x, y);
         }
         return new Tile(x, y);
