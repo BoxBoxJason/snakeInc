@@ -81,7 +81,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
         // Vérifie si le serpent mange la pomme
         if (snake.getHead().equals(food.getPosition())) {
-            score += Math.max(snake.eat(food),0);
+            score += Math.max(snake.eat(food),0) * 5;
             food.updateLocation();
         }
     }

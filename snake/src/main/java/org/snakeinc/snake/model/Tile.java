@@ -2,9 +2,11 @@ package org.snakeinc.snake.model;
 
 import java.awt.Graphics;
 import java.util.Objects;
-import lombok.Getter;
-import org.snakeinc.snake.GamePanel;
+import java.util.Random;
 
+import lombok.Getter;
+import java.util.HashSet;
+import org.snakeinc.snake.GamePanel;
 
 @Getter
 public class Tile {
@@ -18,9 +20,29 @@ public class Tile {
     private int upperPixelX;
     private int upperPixelY;
 
+    public static HashSet<String> existingTiles = new HashSet<String>();
+
     public Tile(int x, int y) {
         setX(x);
         setY(y);
+        existingTiles.add(getKey(x, y));
+    }
+
+    private static String getKey(int x, int y) {
+        return x + "," + y;
+    }
+
+    public static Tile getRandomTile() {
+        Random random = new Random();
+        int x = random.nextInt(0, (GamePanel.GAME_WIDTH / GamePanel.TILE_SIZE) - 1);
+        int y = random.nextInt(0, (GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE) - 1);
+        String randomKey = getKey(x, y);
+        while (existingTiles.contains(randomKey)) {
+            x = random.nextInt(0, (GamePanel.GAME_WIDTH / GamePanel.TILE_SIZE) - 1);
+            y = random.nextInt(0, (GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE) - 1);
+            randomKey = getKey(x, y);
+        }
+        return new Tile(x, y);
     }
 
     public Tile copy() {
@@ -28,13 +50,17 @@ public class Tile {
     }
 
     public void setX(int X) {
+        existingTiles.remove(getKey(x, y));
         this.x = X;
         upperPixelX = X * GamePanel.TILE_SIZE;
+        existingTiles.add(getKey(x, y));
     }
 
     public void setY(int Y) {
+        existingTiles.remove(getKey(x, y));
         this.y = Y;
         upperPixelY = Y * GamePanel.TILE_SIZE;
+        existingTiles.add(getKey(x, y));
     }
 
     public void drawRectangle(Graphics g) {

@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import lombok.Getter;
-import org.snakeinc.snake.GamePanel;
 
 public class Food {
 
@@ -36,18 +35,15 @@ public class Food {
     private Tile position;
     @Getter
     private FoodType type;
-    private final Random random;
 
     public Food() {
         this.type = FoodType.getRandomFoodType();
-        random = new Random();
         updateLocation();
     }
 
     public void updateLocation() {
         type = FoodType.getRandomFoodType();
-        position = new Tile(random.nextInt(0, (GamePanel.GAME_WIDTH / GamePanel.TILE_SIZE) - 1),
-                random.nextInt(0, (GamePanel.GAME_HEIGHT / GamePanel.TILE_SIZE) - 2));
+        position = Tile.getRandomTile();
     }
 
     public void draw(Graphics g) {
