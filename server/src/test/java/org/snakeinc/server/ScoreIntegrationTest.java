@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class ScoreIntegrationTest {
@@ -44,5 +45,28 @@ public class ScoreIntegrationTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         // Additional assertions based on expected data
+    }
+
+    @Test
+    public void testGetSnakeStatistics() {
+        // First, save some scores
+        restTemplate.postForEntity("/api/v1/score", Map.of("snake", "python", "score", 150), String.class);
+        restTemplate.postForEntity("/api/v1/score", Map.of("snake", "python", "score", 100), String.class);
+        restTemplate.postForEntity("/api/v1/score", Map.of("snake", "anaconda", "score", 200), String.class);
+        restTemplate.postForEntity("/api/v1/score", Map.of("snake", "anaconda", "score", 50), String.class);
+
+        // Then, fetch statistics
+        ResponseEntity<Map> response = restTemplate.getForEntity("/api/v1/scores/stats", Map.class);
+
+        // Verify response
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertNotNull(response.getBody().get("stats"));
+
+        // Verify the structure and some content
+        Map<String, Object> stats = (Map<String, Object>) response.getBody();
+        assertNotNull(stats.get("stats"));
+
+        // You can add detailed assertions based on the expected data
     }
 }
