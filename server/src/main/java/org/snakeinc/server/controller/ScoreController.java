@@ -1,6 +1,7 @@
 package org.snakeinc.server.controller;
 
 import org.snakeinc.server.model.ScoreEntity;
+import org.snakeinc.server.dto.SnakeStats;
 import org.snakeinc.server.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ public class ScoreController {
 
     private static final List<String> VALID_SNAKES = List.of("python", "anaconda", "boaConstrictor");
 
+    // POST /api/v1/score
     @PostMapping("/score")
     public ResponseEntity<String> saveScore(@RequestBody ScoreRequest request) {
         if (!VALID_SNAKES.contains(request.getSnake())) {
@@ -34,11 +36,12 @@ public class ScoreController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Score saved successfully.");
     }
 
+    // GET /api/v1/scores
     @GetMapping("/scores")
-    public ScoreResponse getScores(@RequestParam(value = "snake", required = false) String snake) {
+    public ScoresResponse getScores(@RequestParam(value = "snake", required = false) String snake) {
         List<ScoreEntity> scores = scoreService.getScoresBySnake(snake);
 
-        return new ScoreResponse(
+        return new ScoresResponse(
             scores.stream().map(score -> new ScoreDTO(
                 score.getSnake(),
                 score.getScore(),
@@ -47,7 +50,14 @@ public class ScoreController {
         );
     }
 
-    // Inner class for request body
+    // GET /api/v1/scores/stats
+    @GetMapping("/scores/stats")
+    public StatsResponse getSnakeStatistics() {
+        List<SnakeStats> stats = scoreService.getSnakeStatistics();
+        return new StatsResponse(stats);
+    }
+
+    // Inner class for the POST request body
     public static class ScoreRequest {
         private String snake;
         private int score;
@@ -70,11 +80,11 @@ public class ScoreController {
         }
     }
 
-    // Inner class for response
-    public static class ScoreResponse {
+    // Inner class for the GET /api/v1/scores response
+    public static class ScoresResponse {
         private List<ScoreDTO> scores;
 
-        public ScoreResponse(List<ScoreDTO> scores) {
+        public ScoresResponse(List<ScoreDTO> scores) {
             this.scores = scores;
         }
 
@@ -87,7 +97,6 @@ public class ScoreController {
         }
     }
 
-    // Inner class for DTO
     public static class ScoreDTO {
         private String snake;
         private int score;
@@ -121,6 +130,23 @@ public class ScoreController {
 
         public void setDate(String date) {
             this.date = date;
+        }
+    }
+
+    // Inner class for the GET /api/v1/scores/stats response
+    public static class StatsResponse {
+        private List<SnakeStats> stats;
+
+        public StatsResponse(List<SnakeStats> stats) {
+            this.stats = stats;
+        }
+
+        public List<SnakeStats> getStats() {
+            return stats;
+        }
+
+        public void setStats(List<SnakeStats> stats) {
+            this.stats = stats;
         }
     }
 }
