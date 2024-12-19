@@ -41,11 +41,13 @@ public class Tile {
         switch (GamePanel.getDifficulty()) {
             case GamePanel.Difficulty.EASY:
                 Tile head = GamePanel.getSnake().getHead();
-                randomStartXMin = head.getX() - 3;
-                randomStartXMax = head.getX() + 3;
-                randomStartYMin = head.getY() - 3;
-                randomStartYMax = head.getY() + 3;
-                break;
+                if (head != null) {
+                    randomStartXMin = head.getX() - 3;
+                    randomStartXMax = head.getX() + 3;
+                    randomStartYMin = head.getY() - 3;
+                    randomStartYMax = head.getY() + 3;
+                    break;
+                }
             case GamePanel.Difficulty.MEDIUM:
                 break;
             case GamePanel.Difficulty.HARD:

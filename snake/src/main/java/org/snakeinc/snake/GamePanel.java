@@ -1,6 +1,9 @@
 package org.snakeinc.snake;
 
-import java.util.Random;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -12,6 +15,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import java.util.Random;
 import org.snakeinc.snake.model.Food;
 import org.snakeinc.snake.model.Snake;
 
@@ -25,7 +29,6 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     public static final int GAME_WIDTH = TILE_SIZE * N_TILES_X;
     public static final int GAME_HEIGHT = TILE_SIZE * N_TILES_Y;
     private Timer timer;
-    // On n'aura jamais plus que 1 Panel de toute façon :)
     @Getter
     private static Snake snake;
     private Food food;
@@ -81,12 +84,45 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     }
 
     private void gameOver(Graphics g) {
+        // Send the score to the server
+        sendScoreToServer();
+
         g.setColor(Color.RED);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         FontMetrics metrics = getFontMetrics(g.getFont());
         g.drawString("Game Over", (GAME_WIDTH - metrics.stringWidth("Game Over")) / 2, GAME_HEIGHT / 2);
         g.drawString("Press any key to restart", (GAME_WIDTH - metrics.stringWidth("Press any key to restart")) / 2,
                 GAME_HEIGHT / 2 + 50);
+    }
+
+    private void sendScoreToServer() {
+        String snakeType = snake.getRace();
+        try {
+            String jsonPayload = String.format("{\"snake\":\"%s\",\"score\":%d}", snakeType, score);
+            HttpClient client = HttpClient.newHttpClient();
+
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create("http://localhost:8080/api/v1/score"))
+                    .header("Content-Type", "application/json")
+                    .POST(HttpRequest.BodyPublishers.ofString(jsonPayload))
+                    .build();
+
+            // Send request and handle response
+            client.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                    .thenAccept(response -> {
+                        if (response.statusCode() == 201) {
+                            System.out.println("Score successfully sent to the server.");
+                        } else {
+                            System.err.println("Failed to send score. Status code: " + response.statusCode());
+                        }
+                    })
+                    .exceptionally(ex -> {
+                        System.err.println("Error occurred while sending score: " + ex.getMessage());
+                        return null;
+                    });
+        } catch (Exception e) {
+            System.err.println("An error occurred while sending the score: " + e.getMessage());
+        }
     }
 
     private void checkCollision() {
@@ -97,7 +133,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
         // Vérifie si le serpent mange la pomme
         if (snake.getHead().equals(food.getPosition())) {
-            score += Math.max(snake.eat(food),0) * 5;
+            score += Math.max(snake.eat(food), 0) * 5;
             checkZeroLength();
             food.updateLocation();
         }

@@ -44,6 +44,22 @@ public class Snake {
         this.race = Race.getRandomRace();
     }
 
+    public String getRace() {
+        String raceName = "";
+        switch (race) {
+            case PYTHON:
+                raceName = "python";
+                break;
+            case ANACONDA:
+                raceName = "anaconda";
+                break;
+            case BOA:
+                raceName = "boaConstrictor";
+                break;
+        }
+        return raceName;
+    }
+
     public ArrayList<Tile> getBody() {
         return body;
     }
