@@ -1,12 +1,15 @@
 package org.snakeinc.server.controller;
 
+import org.snakeinc.server.model.ScoreEntity;
 import org.snakeinc.server.service.ScoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -31,6 +34,20 @@ public class ScoreController {
         return ResponseEntity.status(HttpStatus.CREATED).body("Score saved successfully.");
     }
 
+    @GetMapping("/scores")
+    public ScoreResponse getScores(@RequestParam(value = "snake", required = false) String snake) {
+        List<ScoreEntity> scores = scoreService.getScoresBySnake(snake);
+
+        return new ScoreResponse(
+            scores.stream().map(score -> new ScoreDTO(
+                score.getSnake(),
+                score.getScore(),
+                score.getDate().format(DateTimeFormatter.ISO_DATE)
+            )).collect(Collectors.toList())
+        );
+    }
+
+    // Inner class for request body
     public static class ScoreRequest {
         private String snake;
         private int score;
@@ -50,6 +67,60 @@ public class ScoreController {
 
         public void setScore(int score) {
             this.score = score;
+        }
+    }
+
+    // Inner class for response
+    public static class ScoreResponse {
+        private List<ScoreDTO> scores;
+
+        public ScoreResponse(List<ScoreDTO> scores) {
+            this.scores = scores;
+        }
+
+        public List<ScoreDTO> getScores() {
+            return scores;
+        }
+
+        public void setScores(List<ScoreDTO> scores) {
+            this.scores = scores;
+        }
+    }
+
+    // Inner class for DTO
+    public static class ScoreDTO {
+        private String snake;
+        private int score;
+        private String date;
+
+        public ScoreDTO(String snake, int score, String date) {
+            this.snake = snake;
+            this.score = score;
+            this.date = date;
+        }
+
+        public String getSnake() {
+            return snake;
+        }
+
+        public void setSnake(String snake) {
+            this.snake = snake;
+        }
+
+        public int getScore() {
+            return score;
+        }
+
+        public void setScore(int score) {
+            this.score = score;
+        }
+
+        public String getDate() {
+            return date;
+        }
+
+        public void setDate(String date) {
+            this.date = date;
         }
     }
 }

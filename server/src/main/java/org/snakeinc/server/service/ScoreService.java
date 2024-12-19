@@ -5,6 +5,8 @@ import org.snakeinc.server.repository.ScoreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ScoreService {
 
@@ -16,5 +18,12 @@ public class ScoreService {
         scoreEntity.setSnake(snake);
         scoreEntity.setScore(score);
         scoreRepository.save(scoreEntity);
+    }
+
+    public List<ScoreEntity> getScoresBySnake(String snake) {
+        if (snake == null || snake.isEmpty()) {
+            return scoreRepository.findAll();
+        }
+        return scoreRepository.findBySnake(snake);
     }
 }
